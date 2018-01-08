@@ -2,3 +2,15 @@
     margin-top: 10px;
     max-width: 300px;
 }
+.wrap-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+.title {
+    font-size: 18px;
+}
+.checkedTitle {
+    text-decoration: line-through
+}
