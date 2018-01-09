@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import {
-  Card, CardActions, CardHeader, CardText, Checkbox, FlatButton, IconButton, LinearProgress,
+  Card, CardActions, CardHeader, CardText, FlatButton, LinearProgress,
   TextField
 } from 'material-ui'
-import RemoveTask from 'material-ui/svg-icons/action/highlight-off'
 import classNames from 'classnames/bind'
 import styles from './index.css'
+import TodoListItem from '../TodoListItem'
+
 const cx = classNames.bind(styles)
 
 const updateObjectInArray = (array, action) => (
@@ -21,7 +22,7 @@ const updateObjectInArray = (array, action) => (
   })
 )
 
-const removeItem = (array, position) => array.filter( (item, index) => index !== position)
+const removeItem = (array, position) => array.filter((item, index) => index !== position)
 
 class TodoList extends Component {
   constructor (props) {
@@ -43,7 +44,7 @@ class TodoList extends Component {
   }
 
   handleExpandChange = (expanded) => {
-    this.setState({ expanded: expanded })
+    this.setState({expanded: expanded})
   }
 
   updateCheck = (index) => () => {
@@ -51,6 +52,15 @@ class TodoList extends Component {
       todo: updateObjectInArray(this.state.todo,
         {
           index, item: {checked: !this.state.todo[index].checked}
+        })
+    })
+  }
+
+  updateTitle = (index, title) => {
+    this.setState({
+      todo: updateObjectInArray(this.state.todo,
+        {
+          index, item: { title: title }
         })
     })
   }
@@ -63,25 +73,21 @@ class TodoList extends Component {
 
   _handleKeyPress = (e) => {
     if (e.key === 'Enter') {
-      this.setState({ todo: [...this.state.todo, { title: this.state.enterText, checked: false }], enterText: '' })
+      this.setState({todo: [...this.state.todo, {title: this.state.enterText, checked: false}], enterText: ''})
     }
   }
 
   onChangeText = (field) => (e) => {
-    this.setState({ [field]: e.target.value })
+    this.setState({[field]: e.target.value})
   }
 
   getProgress = () => {
-    let count = 0;
+    let count = 0
 
     this.state.todo.forEach(item => {
-      if(item.checked) count++;
+      if (item.checked) count++
     })
-    return Math.floor((count / this.state.todo.length)*100);
-  }
-
-  onEditText = (e) => {
-    console.log(e.target.value)
+    return Math.floor((count / this.state.todo.length) * 100)
   }
 
   render () {
@@ -101,33 +107,18 @@ class TodoList extends Component {
           />
           {
             this.state.todo.map((item, index) =>
-              <div className={cx('wrap-list')} key={index}>
-              <Checkbox
-                checked={item.checked}
-                onCheck={this.updateCheck(index)}
-                style={{
-                  width: 'auto'
-                }}
+              <TodoListItem
+                key={index}
+                item={item}
+                index={index}
+                updateCheck={this.updateCheck}
+                removeTask={this.removeTask}
+                updateTitle={this.updateTitle}
               />
-                <span className={cx('title', { checkedTitle: item.checked })}>{item.title}</span>
-                <input
-                  className={cx('title', { checkedTitle: item.checked })}
-                  defaultValue={item.title}
-                  onBlur={this.onEditText}
-                />
-                <IconButton
-                  tooltip="delete"
-                  touch={true}
-                  tooltipPosition="bottom-right"
-                  onClick={this.removeTask(index)}
-                >
-                  <RemoveTask />
-                </IconButton>
-              </div>
             )
           }
           <p>Progress: {this.getProgress()}</p>
-          <LinearProgress mode="determinate" value={this.getProgress()} />
+          <LinearProgress mode="determinate" value={this.getProgress()}/>
         </CardText>
         <CardActions>
           <FlatButton label="Delete" onClick={this.handleExpandChange}/>
