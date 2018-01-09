@@ -6,6 +6,9 @@ import {
 import classNames from 'classnames/bind'
 import styles from './index.css'
 import TodoListItem from '../TodoListItem'
+import {bindActionCreators} from 'redux'
+import {connect} from 'react-redux'
+import * as actionCreators from '../../actions/todoList'
 
 const cx = classNames.bind(styles)
 
@@ -28,18 +31,7 @@ class TodoList extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      completed: 0,
-      enterText: '',
-      todo: [
-        {
-          title: 'abc',
-          checked: false
-        },
-        {
-          title: 'two ones',
-          checked: false
-        }
-      ]
+      enterText: ''
     }
   }
 
@@ -73,7 +65,8 @@ class TodoList extends Component {
 
   _handleKeyPress = (e) => {
     if (e.key === 'Enter') {
-      this.setState({todo: [...this.state.todo, {title: this.state.enterText, checked: false}], enterText: ''})
+      this.props.actions.createTask({})
+      this.setState({enterText: ''})
     }
   }
 
@@ -84,10 +77,10 @@ class TodoList extends Component {
   getProgress = () => {
     let count = 0
 
-    this.state.todo.forEach(item => {
+    this.props.todoList.forEach(item => {
       if (item.checked) count++
     })
-    return Math.floor((count / this.state.todo.length) * 100)
+    return Math.floor((count / this.props.todoList.length) * 100)
   }
 
   render () {
@@ -106,7 +99,7 @@ class TodoList extends Component {
             onKeyPress={this._handleKeyPress}
           />
           {
-            this.state.todo.map((item, index) =>
+            this.props.todoList.map((item, index) =>
               <TodoListItem
                 key={index}
                 item={item}
@@ -128,4 +121,12 @@ class TodoList extends Component {
   }
 }
 
-export default TodoList
+const mapStateToProps = state => ({
+  todoList: state.todoList.data
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actionCreators, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(TodoList)

@@ -5,7 +5,6 @@ import configureStore from './store/configureStore'
 import {syncHistoryWithStore} from 'react-router-redux'
 import {Router} from 'react-router'
 import registerServiceWorker from './registerServiceWorker'
-import rootSaga from './sagas'
 import { history as browserHistory } from './services'
 import App from './containers/App'
 
