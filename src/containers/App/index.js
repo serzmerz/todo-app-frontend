@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import './index.css'
 import { AppBar, MuiThemeProvider } from 'material-ui'
-import TodoList from '../../components/TodoList'
+import TodoList from '../TodoList'
 
 class App extends Component {
   render () {

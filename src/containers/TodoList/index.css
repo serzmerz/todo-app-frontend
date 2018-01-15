@@ -14,3 +14,9 @@
 .checkedTitle {
     text-decoration: line-through
 }
+.complete-text {
+    font-size: 16px;
+}
+.filter {
+    margin-top: 20px;
+}
